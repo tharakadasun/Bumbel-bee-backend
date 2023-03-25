@@ -18,6 +18,4 @@ public class Brand {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
     private String brandName;
-    @OneToMany(mappedBy = "brand")
-    private List<Product> productList;
 }

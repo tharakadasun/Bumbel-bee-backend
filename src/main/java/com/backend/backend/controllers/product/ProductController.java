@@ -1,5 +1,6 @@
 package com.backend.backend.controllers.product;
 
+import com.backend.backend.dtos.product.ProductRequest;
 import com.backend.backend.dtos.product.ProductResponse;
 import com.backend.backend.entities.product.Product;
 import com.backend.backend.services.product.ProductService;
@@ -18,7 +19,7 @@ public class ProductController {
 
     private final ProductService productService;
     @GetMapping("/all")
-    public List<Product> getAllProducts(){
+    public List<ProductResponse> getAllProducts(){
         return productService.getAllProducts();
     }
     @GetMapping("/{id}")
@@ -28,8 +29,14 @@ public class ProductController {
         return ResponseEntity.ok(product);
     }
     @PostMapping("/create")
-    public ResponseEntity<Product> createProduct(@RequestBody Product product, @RequestParam("file") MultipartFile file){
-        Product pro = productService.createProduct(product,file);
+    public ResponseEntity<Product> createProduct(@RequestParam("productName") String productName,
+                                                 @RequestParam("perUnitPrice") Double perUnitPrice,
+                                                 @RequestParam("description") String description,
+                                                 @RequestParam("categoryId") Integer categoryId,
+                                                 @RequestParam("brandId") Integer brandId,
+                                                 @RequestParam("file") MultipartFile file
+    ){
+        Product pro = productService.createProduct(productName,perUnitPrice,description,categoryId,brandId,file);
         return ResponseEntity.ok(pro);
     }
 }
