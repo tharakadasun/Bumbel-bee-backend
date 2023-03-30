@@ -35,4 +35,6 @@ public class Order {
     private List<OrderItem> orderItems;
     @OneToOne(mappedBy = "order", cascade = CascadeType.ALL)
     private Payment payment;
+    @Enumerated(EnumType.STRING)
+    private OrderStatus status;
 }
