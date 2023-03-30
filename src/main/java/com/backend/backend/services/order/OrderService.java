@@ -6,4 +6,6 @@ import com.backend.backend.entities.order.Order;
 
 public interface OrderService {
     OrderResponse createOrder(OrderRequest orderDto);
+
+    OrderResponse updateOrder(OrderRequest orderDto, Integer id);
 }
