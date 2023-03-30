@@ -30,6 +30,7 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.stream.Collectors;
 
 @Service
@@ -71,20 +72,22 @@ public class ProductServiceImpl implements ProductService{
 
     @Override
     public ProductResponse getProductById(Integer id) {
+        Product product = productRepository.findById(id)
+                .orElseThrow(() -> new NoSuchElementException("Product not found"));
+
         ProductResponse productResponse = new ProductResponse();
-        Product product = productRepository.findById(id).get();
-        BeanUtils.copyProperties(product,productResponse);
+        BeanUtils.copyProperties(product, productResponse);
         productResponse.setImageURL(generateImageURL(product.getImageName()));
+
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String currentUserName = authentication.getName();
-        User currentUser = userRepository.findByEmail(currentUserName).get();
-        if(currentUser != null){
+
+        User currentUser = userRepository.findByEmail(currentUserName)
+                .orElse(null);
+
+        if (currentUser != null) {
             double loanBalance = currentUser.getLoan().getLoanBalance();
-            if(product.getPerUnitPrice()<loanBalance){
-                productResponse.setIsLoanActive(true);
-            }else{
-                productResponse.setIsLoanActive(false);
-            }
+            productResponse.setIsLoanActive(product.getPerUnitPrice() < loanBalance);
         }
         return productResponse;
     }
