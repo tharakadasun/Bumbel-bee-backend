@@ -9,15 +9,23 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-//@CrossOrigin(origins = "https://shopping-center-lime.vercel.app")
 @RequiredArgsConstructor
-@RequestMapping("/api/v1/product")
+@CrossOrigin(origins = "*", allowedHeaders = "*", methods = {RequestMethod.GET,RequestMethod.POST})
+@RequestMapping("/api/v1/order")
 public class OrderController {
     private final OrderService orderService;
 
-    @PostMapping("/order")
+    @PostMapping("/create")
     public ResponseEntity<OrderResponse> createOrder(@RequestBody OrderRequest orderDto){
+        System.out.println(orderDto);
         OrderResponse orderResponse = orderService.createOrder(orderDto);
+        return ResponseEntity.ok(orderResponse);
+    }
+
+    @PostMapping("/update/{id}")
+    public ResponseEntity<OrderResponse> updateOrder(@RequestBody OrderRequest orderDto, @PathVariable Integer id){
+        System.out.println(id);
+        OrderResponse orderResponse = orderService.updateOrder(orderDto,id);
         return ResponseEntity.ok(orderResponse);
     }
 }
